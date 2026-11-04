@@ -1,0 +1,31 @@
+# Resource categories, shown on the homepage and the Resources hub.
+# `id` is used in URLs and must match the folder name in src/content/resources/.
+- id: executive-guides
+  title: Executive Guides
+  order: 1
+  description: Practical guides for CEOs and leadership teams making decisions about AI.
+- id: research-reports
+  title: Research Reports
+  order: 2
+  description: Evidence on how Indian businesses are adopting AI, where it works, and where it stalls.
+- id: whitepapers
+  title: Whitepapers
+  order: 3
+  description: Detailed technical and operating guidance for the systems we build.
+- id: case-studies
+  title: Case Studies
+  order: 4
+  description: How specific engagements were run and what changed as a result.
+  emptyNote: Our current engagements are in progress. Case studies are published only once outcomes are measured and the client has approved them.
+- id: decision-intelligence-frameworks
+  title: Decision Intelligence Frameworks
+  order: 5
+  description: Models for turning data into decisions and decisions into action.
+- id: ai-transformation-playbooks
+  title: AI Transformation Playbooks
+  order: 6
+  description: Step-by-step plans for moving from an AI strategy to systems in daily use.
+- id: enterprise-architecture-guides
+  title: Enterprise Architecture Guides
+  order: 7
+  description: Data, security, and integration patterns for AI-ready organisations.

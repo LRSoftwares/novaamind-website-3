@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import EngagementCard from '../components/EngagementCard.astro';
+import { getEngagements, getSolutions } from '../lib/content';
+import { photos } from '../lib/images';
+const engagements = await getEngagements();
+const solutionTitles = Object.fromEntries((await getSolutions()).map((s) => [s.id, s.data.title]));
+---
+<Base title="Our Work | Novaamind" description="What Novaamind is building with its clients today: AI workforce transformation, LMS, knowledge systems, inventory and supply chain, and productivity tools.">
+  <PageHero eyebrow="Our work" title="The work we have done and are doing now." description="We take on a small number of engagements so senior people stay hands-on. Here is the work we have completed and the work in progress today. Full case studies are published only once outcomes are measured and the client has approved them." image={photos.ourWork} crumbs={[{ label: 'Our Work' }]} />
+  <section class="section">
+    <div class="container">
+      <div class="engagements engagements--2">
+        {engagements.map((e) => <EngagementCard entry={e} solutionTitles={solutionTitles} />)}
+      </div>
+    </div>
+  </section>
+  <CtaBanner title="Talk to us about your own operations." />
+</Base>

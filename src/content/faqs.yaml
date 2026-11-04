@@ -1,0 +1,36 @@
+- id: what-does-novaamind-do
+  order: 1
+  question: What does Novaamind do?
+  answer: We help organisations use AI inside their day-to-day operations. That starts with deciding where AI belongs. We then build the systems, such as decision platforms, automations, knowledge systems, and agents, and help people adopt them. Every engagement ends with working software in use.
+- id: who-do-you-work-with
+  order: 2
+  question: What kind of organisations do you work with?
+  answer: Mid-market and enterprise organisations, particularly businesses in salon and spa, retail, education, and agencies. We are based in Chennai, India, and we take on clients in other countries as well. Our engagements usually begin with the CEO, the COO, or another senior leader who sponsors the work.
+- id: where-to-start
+  order: 3
+  question: We are early in our AI journey. Where should we start?
+  answer: Start with an Executive AI Discovery Session. In about an hour we discuss your priorities and the decisions and processes that matter most. You leave with a candid view of where AI can help first, and of the areas where it should wait.
+- id: what-is-fde
+  order: 4
+  question: What is a Forward Deployed Engineer?
+  answer: A Novaamind engineer who joins your team full-time, on site, to find operational problems and build solutions with your people. An FDE writes and ships software and is measured on whether people use it.
+- id: data-security
+  order: 5
+  question: How do you handle our data and security?
+  answer: We build systems inside your environment or on cloud infrastructure you approve. Access follows the permissions you already have, and your sensitive data is never used to train public models. Every engagement starts with agreed data handling rules and a confidentiality agreement.
+- id: existing-systems
+  order: 6
+  question: Do we need to replace our existing systems?
+  answer: No. We connect to the ERP, POS, CRM, HRMS, and spreadsheets you already use. Most of the value comes from bringing existing data together and acting on it.
+- id: how-long
+  order: 7
+  question: How long before we see something working?
+  answer: We aim to put a first working system in front of real users within weeks. We keep the first scope narrow so your team sees value early, and real use shapes the next phase.
+- id: engagement-model
+  order: 8
+  question: How are engagements structured and priced?
+  answer: We scope each engagement after a discovery session. Common forms are a fixed-scope strategy or build phase, or a monthly Forward Deployed Engineer engagement. You receive a clear scope, timeline, and fee before any work begins.
+- id: team-size
+  order: 9
+  question: How large is the Novaamind team?
+  answer: We are a young, focused team based in Chennai. We take on a small number of engagements at a time so that senior people stay hands-on in each one, and we say so in the first conversation.

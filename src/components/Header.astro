@@ -1,0 +1,71 @@
+---
+import Icon from './Icon.astro';
+import { getSolutions, getIndustries } from '../lib/content';
+import { solutionGroups, solutionUrl, industryUrl } from '../lib/site';
+
+const solutions = await getSolutions();
+const industries = await getIndustries();
+const path = Astro.url.pathname;
+const isActive = (prefix: string) => (path.startsWith(prefix) ? 'page' : undefined);
+const short = (s: string) => (s.length > 70 ? s.slice(0, s.lastIndexOf(' ', 68)) + '…' : s);
+---
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label="Novaamind home">
+      <img src="/brand/logo.png" alt="Novaamind" width="154" height="22" />
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span><span class="sr-only">Menu</span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <div class="nav__item" data-dropdown>
+        <button class="nav__link" type="button" aria-expanded="false" aria-current={isActive('/solutions')}>
+          Solutions <Icon name="chevron" />
+        </button>
+        <div class="mega">
+          <div class="mega__grid">
+            {solutionGroups.map((g) => (
+              <div>
+                <p class="mega__group-title">{g.title}</p>
+                {solutions.filter((s) => s.data.group === g.id).map((s) => (
+                  <a class="mega__link" href={solutionUrl(s.id)}>
+                    <strong>{s.data.title}</strong>
+                    <span>{short(s.data.summary)}</span>
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div class="mega__foot">
+            <span>Not sure where to start? Most clients begin with a discovery session.</span>
+            <a class="link-arrow" href="/solutions/">All solutions <Icon name="arrow" /></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav__item" data-dropdown>
+        <button class="nav__link" type="button" aria-expanded="false" aria-current={isActive('/industries')}>
+          Industries <Icon name="chevron" />
+        </button>
+        <div class="mega mega--sm">
+          <div class="mega__grid">
+            {industries.map((i) => (
+              <a class="mega__link" href={industryUrl(i.id)}>
+                <strong>{i.data.title}</strong>
+                <span>{short(i.data.summary)}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="nav__item"><a class="nav__link" href="/resources/" aria-current={isActive('/resources')}>Resources</a></div>
+      <div class="nav__item"><a class="nav__link" href="/insights/" aria-current={isActive('/insights')}>Insights</a></div>
+      <div class="nav__item"><a class="nav__link" href="/about/" aria-current={isActive('/about')}>About</a></div>
+      <div class="nav__item"><a class="nav__link" href="/faqs/" aria-current={isActive('/faqs')}>FAQs</a></div>
+      <div class="nav__cta"><a class="btn btn--sm" href="/contact/">Get in touch</a></div>
+    </nav>
+  </div>
+</header>

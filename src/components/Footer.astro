@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { getSolutions, getIndustries } from '../lib/content';
+import { site, solutionUrl, industryUrl } from '../lib/site';
+const solutions = await getSolutions();
+const industries = await getIndustries();
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img src="/brand/logo-light.png" alt="Novaamind" width="154" height="22" loading="lazy" />
+        <p>{site.tagline}</p>
+        <a class="social" href={site.linkedin} target="_blank" rel="noopener">
+          <Icon name="linkedin" /> Follow on LinkedIn
+        </a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <ul>{solutions.map((s) => <li><a href={solutionUrl(s.id)}>{s.data.title}</a></li>)}</ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>{industries.map((i) => <li><a href={industryUrl(i.id)}>{i.data.title}</a></li>)}</ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/our-work/">Our Work</a></li>
+          <li><a href="/insights/">Insights</a></li>
+          <li><a href="/faqs/">FAQs</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/resources/">Resource library</a></li>
+          <li><a href="/resources/executive-guides/">Executive Guides</a></li>
+          <li><a href="/resources/whitepapers/">Whitepapers</a></li>
+          <li><a href="/resources/decision-intelligence-frameworks/">Frameworks</a></li>
+          <li><a href="/resources/ai-transformation-playbooks/">Playbooks</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span>© {year} {site.legalName} · {site.city}</span>
+      <div class="site-footer__legal">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/terms-of-use/">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+</footer>

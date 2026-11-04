@@ -1,0 +1,21 @@
+---
+import type { Photo } from '../lib/images';
+interface Crumb { label: string; href?: string }
+interface Props { eyebrow?: string; title: string; description?: string; crumbs?: Crumb[]; image?: Photo }
+const { eyebrow, title, description, crumbs = [], image } = Astro.props;
+---
+<section class:list={['hero', 'hero--page', { 'hero--photo': image }]}>
+  {image && <div class="hero__bg" aria-hidden="true"><img src={image.src} alt="" fetchpriority="high" decoding="async" /></div>}
+  <div class="container">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        {crumbs.map((c) => (<><span aria-hidden="true">/</span>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>))}
+      </nav>
+    )}
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {description && <p class="hero__body">{description}</p>}
+    <slot />
+  </div>
+</section>

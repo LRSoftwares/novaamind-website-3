@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getIndustries, getEngagements } from '../../lib/content';
+import { industryUrl } from '../../lib/site';
+import { industryPhotos, photos } from '../../lib/images';
+const industries = await getIndustries();
+const engagements = await getEngagements();
+const clientsFor = (id: string) => engagements.filter((e) => e.data.industry === id).map((e) => e.data.client).join(' · ');
+---
+<Base title="Industries We Serve | Novaamind" description="AI solutions for salon and spa, retail, education, and agency businesses, built from work on the ground in each sector.">
+  <PageHero eyebrow="Industries" title="We work in a few industries and learn them well." description="We focus on a small set of industries: salon networks, retail and gifting brands, education providers, and agencies. Working closely in each one lets us build for how the business really runs." image={photos.hero} crumbs={[{ label: 'Industries' }]} />
+  <section class="section">
+    <div class="container">
+      <div class="tiles">
+        {industries.map((i) => (
+          <a class="tile" href={industryUrl(i.id)} data-reveal>
+            <img src={industryPhotos[i.id].src} alt={industryPhotos[i.id].alt} loading="lazy" decoding="async" />
+            {clientsFor(i.id) && <p class="tile__client">{clientsFor(i.id)}</p>}
+            <h3>{i.data.title}</h3>
+            <p>{i.data.summary}</p>
+            <span class="link-arrow">Explore {i.data.title} <Icon name="arrow" /></span>
+          </a>
+        ))}
+      </div>
+      <div class="note" style="margin-top:32px">
+        <Icon name="info" />
+        <span>If you run a multi-unit business in another sector, such as hospitality, healthcare clinics, or services, the same patterns usually apply. <a href="/contact/" style="text-decoration:underline;font-weight:600">Tell us about your business.</a></span>
+      </div>
+    </div>
+  </section>
+  <CtaBanner />
+</Base>

@@ -1,0 +1,65 @@
+# Client engagements. Used on the homepage, the Our Work page, and industry pages.
+# - industry: links the engagement to an industry page (salon-spa, retail, education), or leave it out.
+# - solutions: solution page ids to link to.
+# - show: false hides an engagement everywhere without deleting it.
+- id: naturals
+  order: 1
+  client: Naturals Salon & Spa
+  logo: /clients/naturals.png
+  sector: Salon & Spa
+  industry: salon-spa
+  status: Completed
+  work: [AI Workforce Transformation, Internal process AI solutions consulting]
+  solutions: [ai-workforce-transformation, ai-process-automation]
+  summary: >-
+    We work with Naturals, a franchise network of more than 1000 salons, on AI workforce transformation and on consulting for AI solutions in its internal processes. The specific systems and results are kept confidential for security reasons.
+  confidential: true
+
+- id: learning-room-academy
+  order: 2
+  client: Learning Room Academy
+  logo: /clients/learning-room-academy.png
+  sector: Education
+  industry: education
+  status: In progress
+  work: [Learning management system (LMS), Enterprise Knowledge Systems]
+  solutions: [enterprise-knowledge-systems]
+  summary: >-
+    For Learning Room Academy, a K-12 coaching brand, we are building a learning management system and an enterprise knowledge system that keeps its academic and operating knowledge in one place.
+
+- id: copper-and-sage
+  order: 3
+  client: Copper & Sage
+  logo: /clients/copper-and-sage.png
+  sector: Retail & Gifting
+  industry: retail
+  status: In progress
+  work: [Inventory and supply chain enterprise solution]
+  solutions: [ai-process-automation, decision-intelligence]
+  summary: >-
+    For Copper & Sage, a gifting brand, we are building an enterprise solution that manages inventory and supply chain operations.
+
+- id: the-halo-effect-consulting
+  order: 4
+  client: The Halo Effect Consulting
+  logo: /clients/the-halo-effect-consulting.png
+  sector: Agencies
+  industry: agencies
+  status: In progress
+  work: [Productivity tool, Enterprise Knowledge Systems]
+  solutions: [enterprise-knowledge-systems]
+  summary: >-
+    For The Halo Effect Consulting, we are building a productivity tool for the team and an enterprise knowledge system that keeps the firm's know-how easy to find.
+
+- id: bae-by-naturals
+  order: 5
+  show: false   # Hidden on 2026-11-04 after BAE was removed from the logo strip. Set to true to show again.
+  client: BAE by Naturals
+  logo: /clients/bae.png
+  sector: Retail
+  industry: retail
+  status: In progress
+  work: [Retail decision platform]
+  solutions: [decision-intelligence]
+  summary: >-
+    For BAE by Naturals, a premium multi-brand beauty retail chain, we are building a retail decision platform that brings together customer analytics, inventory visibility, store performance, and executive dashboards.

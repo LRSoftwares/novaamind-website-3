@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getSolutions } from '../../lib/content';
+import { solutionGroups, solutionUrl, site } from '../../lib/site';
+import { solutionPhotos, photos } from '../../lib/images';
+const solutions = await getSolutions();
+const groupIntro: Record<string, string> = {
+  enablement: 'Decide where AI belongs, and give leaders and teams the information and knowledge they need.',
+  workforce: 'Build AI capability in your people through structured programmes and engineers who work alongside them.',
+  embedded: 'Put AI directly into processes and departments, so routine work runs faster and more consistently.',
+};
+---
+<Base title="AI Solutions for Enterprises | Novaamind" description="Seven ways Novaamind puts AI to work: strategy, workforce transformation, automation, decision intelligence, knowledge systems, AI agents, and embedded engineers.">
+  <PageHero eyebrow="Solutions" title="Seven ways we put AI to work in your organisation." description="Grouped by what they change: how you decide, how your people work, and how your processes run. Most engagements combine two or three." image={photos.hero} crumbs={[{ label: 'Solutions' }]}>
+    <div class="btn-row"><a class="btn btn--light" href={site.primaryCta.href}>{site.primaryCta.label} <Icon name="arrow" /></a></div>
+  </PageHero>
+  {solutionGroups.map((g, gi) => (
+    <section class={`section ${gi % 2 ? 'section--paper' : ''}`}>
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">{String(gi + 1).padStart(2, '0')} · {g.title}</p>
+          <h2>{g.title}</h2>
+          <p>{groupIntro[g.id]}</p>
+        </div>
+        <div class="grid grid--3">
+          {solutions.filter((s) => s.data.group === g.id).map((s) => (
+            <a class={`card card--media ${s.id === 'forward-deployed-engineers' ? 'card--feature' : ''}`} href={solutionUrl(s.id)} data-reveal>
+              <div class="card__media-wrap">
+                <div class="card__media"><img src={solutionPhotos[s.id].src} alt={solutionPhotos[s.id].alt} loading="lazy" decoding="async" /></div>
+                <span class="card__icon"><Icon name={s.data.icon} /></span>
+              </div>
+              <div class="card__content">
+                <h3>{s.data.title}</h3>
+                <p>{s.data.summary}</p>
+                <span class="link-arrow">Learn more <Icon name="arrow" /></span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+  <CtaBanner title="Not sure which of these you need?" text="That is common. A discovery session will show you which one to start with, and whether you need any of them yet." />
+</Base>

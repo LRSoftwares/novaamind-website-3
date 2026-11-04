@@ -1,0 +1,107 @@
+# Novaamind content manager (Decap CMS). Open /admin/ to write, edit, and publish.
+#
+# On your computer: run `npm run cms` in one terminal and `npm run dev` in another,
+# then open http://localhost:4321/admin/. Changes are saved straight into src/content/.
+#
+# On the live site: set `repo` below to the GitHub repository for this site and
+# follow docs/CMS.md to connect GitHub login. Each "Publish" becomes a commit and
+# Vercel rebuilds the site.
+backend:
+  name: github
+  repo: LRSoftwares/novaamind-website-3
+  branch: main
+  # base_url is set in admin/index.html to the address the site is served from.
+  auth_endpoint: api/auth
+  commit_messages:
+    create: 'Add {{collection}}: {{slug}}'
+    update: 'Update {{collection}}: {{slug}}'
+    delete: 'Remove {{collection}}: {{slug}}'
+
+local_backend: true
+
+site_url: https://novaamind.com
+display_url: https://novaamind.com
+logo_url: /brand/logo.png
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: resources
+    label: Resources
+    label_singular: Resource
+    description: Guides, reports, whitepapers, frameworks, and playbooks in the Resources library.
+    folder: src/content/resources
+    path: '{{category}}/{{slug}}'
+    slug: '{{title}}'
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    summary: '{{title}} ({{category}}, {{status}})'
+    sortable_fields: [title, category, order, status]
+    view_filters:
+      - { label: Published, field: status, pattern: published }
+      - { label: In preparation, field: status, pattern: in-preparation }
+    view_groups:
+      - { label: Category, field: category }
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: category
+        label: Category
+        widget: select
+        options:
+          - { label: Executive Guides, value: executive-guides }
+          - { label: Research Reports, value: research-reports }
+          - { label: Whitepapers, value: whitepapers }
+          - { label: Case Studies, value: case-studies }
+          - { label: Decision Intelligence Frameworks, value: decision-intelligence-frameworks }
+          - { label: AI Transformation Playbooks, value: ai-transformation-playbooks }
+          - { label: Enterprise Architecture Guides, value: enterprise-architecture-guides }
+      - { name: order, label: Order in category, widget: number, value_type: int, default: 10, hint: Lower numbers appear first. }
+      - name: format
+        label: Format
+        widget: select
+        options: [Gated PDF, Free article]
+        default: Free article
+        hint: A gated PDF asks for the reader's details before the download. A free article is read on the page.
+      - name: status
+        label: Status
+        widget: select
+        options:
+          - { label: In preparation (shows a "notify me" form), value: in-preparation }
+          - { label: Published, value: published }
+        default: in-preparation
+      - { name: description, label: Description, widget: text, hint: Two or three sentences shown on the resource card and page. }
+      - { name: reader, label: Who it is for, widget: string }
+      - { name: sections, label: What it covers, widget: list, required: false, field: { name: section, label: Section, widget: string } }
+      - name: file
+        label: PDF file
+        widget: file
+        required: false
+        media_folder: /public/downloads
+        public_folder: /downloads
+        hint: For a gated PDF that is published. Upload the PDF here.
+      - { name: seoDescription, label: Search description, widget: string, required: false, pattern: ['^.{0,160}$', 'Keep it under 160 characters'], hint: Optional. Shown in Google results. }
+      - { name: body, label: Article, widget: markdown, required: false, hint: The full text. It appears on the page once the status is Published. }
+
+  - name: insights
+    label: Insights
+    label_singular: Insight
+    description: Short articles in the Insights section.
+    folder: src/content/insights
+    slug: '{{title}}'
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    summary: '{{title}} ({{date}})'
+    sortable_fields: [title, date]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: summary, label: Summary, widget: text, hint: One or two sentences shown on the article card. }
+      - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD' }
+      - { name: author, label: Author, widget: string, default: Raghav Venkat }
+      - { name: tags, label: Tags, widget: list, required: false }
+      - { name: draft, label: Hide from the live site, widget: boolean, default: false, hint: Turn on to keep the article off the live site while you work on it. }
+      - { name: body, label: Article, widget: markdown }

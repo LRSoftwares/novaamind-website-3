@@ -1,0 +1,68 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import ResourceCard from '../../../components/ResourceCard.astro';
+import { getCategories, getResources } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const resources = await getResources();
+  return resources.map((entry) => {
+    const [category, slug] = entry.id.split('/');
+    return { params: { category, slug }, props: { entry } };
+  });
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const categories = await getCategories();
+const cat = categories.find((c) => c.id === d.category)!;
+const siblings = (await getResources()).filter((r) => r.data.category === d.category && r.id !== entry.id);
+const published = d.status === 'published';
+---
+<Base title={`${d.title} | Novaamind`.slice(0, 60)} description={(d.seoDescription ?? d.description).slice(0, 155)}>
+  <PageHero eyebrow={cat.data.title} title={d.title} description={d.description} crumbs={[{ label: 'Resources', href: '/resources/' }, { label: cat.data.title, href: `/resources/${cat.id}/` }, { label: d.title.length > 40 ? d.title.slice(0, d.title.lastIndexOf(' ', 38)) + '…' : d.title }]}>
+    <div class="btn-row">
+      {published && d.file ? (
+        d.format === 'Gated PDF'
+          ? <button class="btn btn--light" type="button" data-resource-open={entry.id} data-resource-title={d.title} data-resource-file={d.file}>Download the PDF <Icon name="download" /></button>
+          : <a class="btn btn--light" href={d.file}>Download <Icon name="download" /></a>
+      ) : (
+        <button class="btn btn--light" type="button" data-resource-open={entry.id} data-resource-title={d.title}>Notify me when it is published <Icon name="mail" /></button>
+      )}
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container split">
+      <div class="sticky-col">
+        <div class="form-card" style="box-shadow:none">
+          <p class="outcome__label">At a glance</p>
+          <dl style="margin:0;display:grid;gap:16px">
+            <div><dt class="muted" style="font-size:.8rem">Status</dt><dd style="margin:0"><span class={`badge ${published ? 'badge--live' : 'badge--soon'}`}>{published ? 'Published' : 'In preparation'}</span></dd></div>
+            <div><dt class="muted" style="font-size:.8rem">Format</dt><dd style="margin:0;color:var(--ink);font-weight:600">{d.format}</dd></div>
+            <div><dt class="muted" style="font-size:.8rem">Written for</dt><dd style="margin:0;color:var(--ink)">{d.reader}</dd></div>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">What it covers</p>
+        <h2>Inside this {d.format === 'Free article' ? 'article' : 'guide'}</h2>
+        <div class="numbered" style="margin-top:24px">
+          {d.sections.map((s) => (<div class="numbered__item"><div><h3>{s}</h3></div></div>))}
+        </div>
+        {published && <div class="prose" style="margin-top:40px"><Content /></div>}
+      </div>
+    </div>
+  </section>
+
+  {siblings.length > 0 && (
+    <section class="section section--paper">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">More in {cat.data.title}</p><h2>Related titles</h2></div>
+        <div class="grid grid--3">{siblings.map((r) => <ResourceCard entry={r} categoryTitle={cat.data.title} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>

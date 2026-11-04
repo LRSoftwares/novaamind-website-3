@@ -1,0 +1,33 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getInsights } from '../../lib/content';
+import { site } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getInsights();
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const fmt = d.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.summary,
+  datePublished: d.date.toISOString(), author: { '@type': 'Person', name: d.author },
+  publisher: { '@type': 'Organization', name: site.legalName },
+};
+---
+<Base title={`${d.title} | Novaamind`.slice(0, 60)} description={d.summary.slice(0, 155)} schema={schema} noindex={d.draft}>
+  <PageHero eyebrow={d.tags.join(' · ') || 'Insight'} title={d.title} description={`${d.author} · ${fmt}`} crumbs={[{ label: 'Insights', href: '/insights/' }, { label: 'Article' }]} />
+  <section class="section">
+    <div class="container container--narrow">
+      <p class="lede" style="color:var(--ink);font-weight:500">{d.summary}</p>
+      <hr class="divider" style="margin:32px 0" />
+      <div class="prose"><Content /></div>
+    </div>
+  </section>
+  <CtaBanner />
+</Base>

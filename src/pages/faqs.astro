@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { getFaqs } from '../lib/content';
+const faqs = await getFaqs();
+const schema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.data.question, acceptedAnswer: { '@type': 'Answer', text: f.data.answer } })),
+};
+---
+<Base title="FAQs | Novaamind" description="Answers to common questions about working with Novaamind, including engagements, Forward Deployed Engineers, data security, timelines, and pricing." schema={schema}>
+  <PageHero eyebrow="FAQs" title="Questions leaders usually ask us." crumbs={[{ label: 'FAQs' }]} />
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="faq">
+        {faqs.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.data.question}</summary>
+            <div class="faq__body"><p>{f.data.answer}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaBanner title="Have a question we have not answered here?" text="Ask us directly. We will answer plainly, and we will tell you if we think we are the wrong fit." />
+</Base>

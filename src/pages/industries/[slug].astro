@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getIndustries, getSolutions, getEngagements } from '../../lib/content';
+import EngagementCard from '../../components/EngagementCard.astro';
+import { site, solutionUrl } from '../../lib/site';
+import { industryPhotos } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const industries = await getIndustries();
+  return industries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const solutions = await getSolutions();
+const engagements = (await getEngagements()).filter((e) => e.data.industry === entry.id);
+const solutionTitles = Object.fromEntries(solutions.map((s) => [s.id, s.data.title]));
+const services = d.services.map((s) => ({ ...s, sol: solutions.find((x) => x.id === s.slug) })).filter((s) => s.sol);
+---
+<Base title={d.seo.title} description={d.seo.description} keywords={[d.seo.keyword, ...d.seo.secondary]}>
+  <PageHero eyebrow={d.title} title={d.hero.headline} description={d.hero.description} image={industryPhotos[entry.id]} crumbs={[{ label: 'Industries', href: '/industries/' }, { label: d.title }]}>
+    <div class="btn-row"><a class="btn btn--light" href={site.primaryCta.href}>{site.primaryCta.label} <Icon name="arrow" /></a></div>
+  </PageHero>
+
+  {engagements.length > 0 && (
+    <section class="section section--paper section--tight">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">Our work in {d.title.toLowerCase()}</p><h2>{engagements.length > 1 ? 'Current engagements' : 'Current engagement'}</h2></div>
+        <div class:list={['engagements', engagements.length === 1 ? 'engagements--single' : 'engagements--2']}>
+          {engagements.map((e) => <EngagementCard entry={e} solutionTitles={solutionTitles} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">The challenge</p><h2>The AI challenge in {d.title.toLowerCase()}.</h2><p>Three operating problems we see again and again.</p></div>
+      <div class="grid grid--3">
+        {d.challenges.map((c, i) => (
+          <div class="outcome" data-reveal><p class="outcome__label">Problem {String(i + 1).padStart(2, '0')}</p><h3>{c.title}</h3><p>{c.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container split">
+      <div class="sticky-col">
+        <p class="eyebrow">What we build</p>
+        <h2>What Novaamind builds for {d.title.toLowerCase()}.</h2>
+        <p class="muted">Each built on your existing systems, and introduced in stages so teams adopt as they go.</p>
+      </div>
+      <div class="numbered">
+        {d.builds.map((b) => (<div class="numbered__item"><div><h3>{b.title}</h3><p>{b.text}</p></div></div>))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Services</p><h2>Services most relevant to {d.title.toLowerCase()}.</h2></div>
+      <div class="related">
+        {services.map((s) => (
+          <a href={solutionUrl(s.slug)}><strong>{s.sol!.data.title}</strong><span>{s.line}</span><Icon name="arrow" /></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner title={`Talk to us about your ${d.title.toLowerCase()} business.`} text="Bring one operating problem to a discovery session. We will tell you plainly whether AI is the right answer, and what it would take." />
+</Base>

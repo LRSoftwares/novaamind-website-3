@@ -1,0 +1,13 @@
+---
+import Icon from './Icon.astro';
+import { resourceUrl } from '../lib/site';
+interface Props { entry: any; categoryTitle: string }
+const { entry, categoryTitle } = Astro.props;
+const d = entry.data;
+---
+<article class="card card--hover res-card" data-category={d.category} data-reveal>
+  <p class="card__tag"><span>{categoryTitle}</span><span class={`badge ${d.status === 'published' ? 'badge--live' : 'badge--soon'}`}>{d.status === 'published' ? d.format : 'In preparation'}</span></p>
+  <h3><a href={resourceUrl(entry.id)}>{d.title}</a></h3>
+  <p>{d.description}</p>
+  <a class="link-arrow" href={resourceUrl(entry.id)}>{d.status === 'published' ? 'Read more' : 'See what it covers'} <Icon name="arrow" /></a>
+</article>

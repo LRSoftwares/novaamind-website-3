@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getCategories, getResources } from '../../lib/content';
+const categories = await getCategories();
+const resources = await getResources();
+const catTitle = (id: string) => categories.find((c) => c.id === id)?.data.title ?? id;
+const ordered = categories.flatMap((c) => resources.filter((r) => r.data.category === c.id));
+---
+<Base title="AI Resources for Business Leaders | Novaamind" description="Executive guides, research, whitepapers, frameworks, and playbooks on enterprise AI and decision intelligence, written for leadership teams.">
+  <PageHero eyebrow="Resources" title="Practical thinking for the people who decide." description="Guides, frameworks, and research drawn from the work we do. We publish one or two titles a month, and each one is written to be useful in a leadership meeting." crumbs={[{ label: 'Resources' }]} />
+
+  <section class="section">
+    <div class="container">
+      <div class="note" style="margin-bottom:32px">
+        <Icon name="info" />
+        <span>The library is being written now. Each title below shows what it will cover. Register for any of them and we will email it to you on the day it is published.</span>
+      </div>
+
+      <div class="filters" data-filters role="group" aria-label="Filter by category">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
+        {categories.map((c) => (
+          <button class="filter" type="button" data-filter={c.id} aria-pressed="false" data-empty={c.data.emptyNote}>{c.data.title}</button>
+        ))}
+      </div>
+
+      <div class="grid grid--3">
+        {ordered.map((r) => <ResourceCard entry={r} categoryTitle={catTitle(r.data.category)} />)}
+      </div>
+      <div class="note" data-filter-empty hidden style="margin-top:8px">
+        <Icon name="info" /><p class="mb-0"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">By category</p><h2>Seven collections.</h2></div>
+      <div class="related">
+        {categories.map((c) => (
+          <a href={`/resources/${c.id}/`}><strong>{c.data.title}</strong><span>{c.data.description}</span><Icon name="arrow" /></a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaBanner />
+</Base>

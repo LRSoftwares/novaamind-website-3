@@ -1,0 +1,64 @@
+---
+// Executive AI Discovery Session / contact form. Posts to /api/lead.
+import Icon from './Icon.astro';
+import { getSolutions } from '../lib/content';
+interface Props { source?: string; compact?: boolean }
+const { source = 'contact', compact = false } = Astro.props;
+const solutions = await getSolutions();
+---
+<form class="form" data-lead-form data-type="discovery" novalidate>
+  <input type="hidden" name="type" value="discovery" />
+  <input type="hidden" name="source" value={source} />
+  <div class="form__hp" aria-hidden="true"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+
+  <div class="form__row">
+    <div class="field"><label for="lf-name">Full name</label><input id="lf-name" name="name" autocomplete="name" required /><span class="field__error"></span></div>
+    <div class="field"><label for="lf-email">Work email</label><input id="lf-email" name="email" type="email" autocomplete="email" required /><span class="field__error"></span></div>
+  </div>
+  <div class="form__row">
+    <div class="field"><label for="lf-company">Company</label><input id="lf-company" name="company" autocomplete="organization" required /><span class="field__error"></span></div>
+    <div class="field"><label for="lf-role">Role / designation</label><input id="lf-role" name="role" autocomplete="organization-title" required /><span class="field__error"></span></div>
+  </div>
+  {!compact && (
+    <div class="form__row">
+      <div class="field">
+        <label for="lf-size">Company size</label>
+        <select id="lf-size" name="companySize" required>
+          <option value="">Select</option>
+          <option>Under 200 employees</option>
+          <option>200–500</option>
+          <option>500–2,000</option>
+          <option>2,000–5,000</option>
+          <option>5,000+</option>
+        </select>
+        <span class="field__error"></span>
+      </div>
+      <div class="field">
+        <label for="lf-phone">Phone <span class="opt">(optional)</span></label>
+        <input id="lf-phone" name="phone" type="tel" autocomplete="tel" />
+        <span class="field__error"></span>
+      </div>
+    </div>
+  )}
+  <div class="field">
+    <label for="lf-interest">What would you like to discuss?</label>
+    <select id="lf-interest" name="interest" required>
+      <option value="">Select an area</option>
+      <option>Not sure yet. Help me find where to start</option>
+      {solutions.map((s) => <option>{s.data.title}</option>)}
+    </select>
+    <span class="field__error"></span>
+  </div>
+  <div class="field">
+    <label for="lf-message">The challenge in a few lines <span class="opt">(optional)</span></label>
+    <textarea id="lf-message" name="message" maxlength="2000" placeholder="e.g. Our monthly franchise review relies on spreadsheets that arrive two weeks late."></textarea>
+  </div>
+  <button class="btn btn--block" type="submit">Request a discovery session <Icon name="arrow" /></button>
+  <p class="form__fine">We reply within one working day. Your details are used only to respond to this request. See our <a href="/privacy-policy/" style="text-decoration:underline">privacy policy</a>.</p>
+  <div class="form__status" role="status" hidden></div>
+</form>
+<div class="form-success" data-form-success hidden>
+  <div class="form-success__icon"><Icon name="check" /></div>
+  <h3>Thank you. We have your request.</h3>
+  <p class="muted">We will reply within one working day to find a time for your discovery session. If it is urgent, write to us directly at <a href="mailto:raghav@novaamind.com" style="text-decoration:underline">raghav@novaamind.com</a>.</p>
+</div>

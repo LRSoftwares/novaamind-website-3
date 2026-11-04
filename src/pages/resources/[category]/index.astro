@@ -1,0 +1,33 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import ResourceCard from '../../../components/ResourceCard.astro';
+import CtaBanner from '../../../components/CtaBanner.astro';
+import { getCategories, getResources } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  return categories.map((c) => ({ params: { category: c.id }, props: { cat: c } }));
+}
+const { cat } = Astro.props;
+const items = (await getResources()).filter((r) => r.data.category === cat.id);
+---
+<Base title={`${cat.data.title} | Novaamind Resources`} description={`${cat.data.description} From Novaamind, an enterprise AI transformation company based in India.`.slice(0, 155)}>
+  <PageHero eyebrow="Resources" title={cat.data.title} description={cat.data.description} crumbs={[{ label: 'Resources', href: '/resources/' }, { label: cat.data.title }]} />
+  <section class="section">
+    <div class="container">
+      {items.length > 0 ? (
+        <div class="grid grid--3">
+          {items.map((r) => <ResourceCard entry={r} categoryTitle={cat.data.title} />)}
+        </div>
+      ) : (
+        <div class="container--narrow" style="margin:0">
+          <div class="note"><Icon name="info" /><span>{cat.data.emptyNote ?? 'New titles are on the way.'}</span></div>
+          <p style="margin-top:24px"><a class="link-arrow" href="/our-work/">See our current engagements <Icon name="arrow" /></a></p>
+        </div>
+      )}
+    </div>
+  </section>
+  <CtaBanner />
+</Base>

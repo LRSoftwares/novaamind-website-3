@@ -1,0 +1,159 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getSolutions, getIndustries } from '../../lib/content';
+import { site, solutionUrl, industryUrl } from '../../lib/site';
+import { solutionPhotos } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const solutions = await getSolutions();
+  return solutions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const all = await getSolutions();
+const related = d.related.map((id) => all.find((s) => s.id === id)).filter(Boolean) as typeof all;
+const industries = (await getIndustries()).filter((i) => i.data.services.some((s) => s.slug === entry.id));
+const isFde = entry.id === 'forward-deployed-engineers';
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Service', name: d.title, description: d.summary,
+  provider: { '@type': 'Organization', name: site.legalName, url: site.url }, areaServed: 'IN',
+};
+---
+<Base title={d.seo.title} description={d.seo.description} keywords={[d.seo.keyword, ...d.seo.secondary]} schema={schema}>
+  <PageHero eyebrow={d.title} title={d.hero.headline} description={d.hero.description} image={solutionPhotos[entry.id]} crumbs={[{ label: 'Solutions', href: '/solutions/' }, { label: d.title }]}>
+    <div class="btn-row">
+      <a class="btn btn--light" href={site.primaryCta.href}>{site.primaryCta.label} <Icon name="arrow" /></a>
+    </div>
+  </PageHero>
+
+  <!-- Problem / What is -->
+  <section class="section">
+    <div class="container split">
+      <div class="sticky-col">
+        <p class="eyebrow">{isFde ? 'The model' : 'The problem'}</p>
+        <h2>{d.bodyHeading}</h2>
+      </div>
+      <div class="prose"><Content /></div>
+    </div>
+  </section>
+
+  {isFde && (
+    <section class="section section--paper">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">How it works</p><h2>{d.processHeading}</h2></div>
+        <div class="steps">
+          {d.process.map((p, i) => (
+            <div class="step" data-reveal><p class="step__num">{String(i + 1).padStart(2, '0')}</p><h3>{p.title}</h3><p>{p.text}</p></div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {d.whyItWorks && (
+    <section class="section section--dark">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">Why it works</p><h2>Why the model works</h2></div>
+        <div class="grid grid--3">
+          {d.whyItWorks.map((w, i) => (
+            <div class="stepper__panel" data-reveal>
+              <p class="eyebrow">{String(i + 1).padStart(2, '0')}</p>
+              <h3>{w.title}</h3>
+              <p class="mb-0" style="color:#b4c2d6">{w.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Deliverables -->
+  <section class={`section ${isFde ? '' : 'section--paper'}`}>
+    <div class="container split">
+      <div class="sticky-col">
+        <p class="eyebrow">Deliverables</p>
+        <h2>{d.deliverablesHeading}</h2>
+        <p class="muted">Specific outputs, agreed in the scope before work begins.</p>
+      </div>
+      <div class="numbered">
+        {d.deliverables.map((x) => (<div class="numbered__item"><div><h3>{x.title}</h3><p>{x.text}</p></div></div>))}
+      </div>
+    </div>
+  </section>
+
+  {!isFde && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">Delivery</p><h2>{d.processHeading}</h2></div>
+        <div class="steps">
+          {d.process.map((p, i) => (
+            <div class="step" data-reveal><p class="step__num">{String(i + 1).padStart(2, '0')}</p><h3>{p.title}</h3><p>{p.text}</p></div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Outcomes -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Business outcomes</p>
+        <h2>What changes, and how we measure it</h2>
+        <p>We agree on baselines at the start, so you can see the results in your own numbers.</p>
+      </div>
+      <div class="grid grid--3">
+        {d.outcomes.map((o, i) => (
+          <div class="outcome" data-reveal><p class="outcome__label">Outcome {String(i + 1).padStart(2, '0')}</p><h3>{o.title}</h3><p>{o.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Who this is for</p><h2>{isFde ? 'Who it is for' : 'Who this is for'}</h2><p>{d.audience.intro}</p></div>
+      <div class="grid grid--3">
+        {d.audience.profiles.map((p) => (
+          <div class="profile" data-reveal><span class="profile__tag">Profile</span><h3>{p.title}</h3><p>{p.text}</p></div>
+        ))}
+      </div>
+      {industries.length > 0 && (
+        <p class="muted" style="margin-top:28px">
+          Relevant industries: {industries.map((i, n) => (<>{n > 0 && ' · '}<a href={industryUrl(i.id)} style="color:var(--navy);font-weight:600">{i.data.title}</a></>))}
+        </p>
+      )}
+    </div>
+  </section>
+
+  {d.inPractice && (
+    <section class="section section--paper">
+      <div class="container container--narrow">
+        <p class="eyebrow">In practice</p>
+        <h2>The model at work.</h2>
+        <p class="lede">{d.inPractice}</p>
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">Works well with</p><h2>Related solutions</h2></div>
+        <div class="related">
+          {related.map((r) => (
+            <a href={solutionUrl(r.id)}><strong>{r.data.title}</strong><span>{r.data.summary}</span><Icon name="arrow" /></a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBanner title={`Talk to us about ${d.title}.`} />
+</Base>

@@ -1,0 +1,12 @@
+---
+import Base from './Base.astro';
+import PageHero from '../components/PageHero.astro';
+// Used as the `layout:` of Markdown pages, so values arrive on `frontmatter`.
+const { title, description, updated } = Astro.props.frontmatter as { title: string; description: string; updated: string };
+---
+<Base title={`${title} | Novaamind`} description={description}>
+  <PageHero eyebrow="Legal" title={title} description={`Last updated ${updated}`} crumbs={[{ label: title }]} />
+  <section class="section">
+    <div class="container container--narrow prose"><slot /></div>
+  </section>
+</Base>

@@ -1,0 +1,309 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { getSolutions, getCategories, getResources, getIndustries, getEngagements } from '../lib/content';
+import EngagementCard from '../components/EngagementCard.astro';
+import { photos, solutionPhotos, industryPhotos } from '../lib/images';
+import { site, solutionUrl, categoryUrl, industryUrl } from '../lib/site';
+
+const solutions = await getSolutions();
+const categories = await getCategories();
+const resources = await getResources();
+const industries = await getIndustries();
+const engagements = await getEngagements();
+const countFor = (id: string) => resources.filter((r) => r.data.category === id).length;
+const fde = solutions.find((s) => s.id === 'forward-deployed-engineers');
+const core = solutions.filter((s) => s.id !== 'forward-deployed-engineers');
+
+// Client logos for the scrolling strip. Add a logo file to public/clients/ and a line here.
+const clients = [
+  { name: 'Naturals Salon & Spa', logo: '/clients/naturals.png' },
+  { name: 'Learning Room Academy', logo: '/clients/learning-room-academy.png' },
+  { name: 'DC Growth Partners', logo: '/clients/dc-growth-partners.png' },
+  { name: 'Copper & Sage', logo: '/clients/copper-and-sage.png' },
+  { name: 'The Halo Effect Consulting', logo: '/clients/the-halo-effect-consulting.png' },
+];
+
+// Transformation Framework — edit copy here.
+const framework = [
+  { title: 'Discover', text: 'Understand business priorities, operating challenges, and strategic objectives, from the people who run the business.',
+    does: 'Leadership conversations, process walk-throughs, and a review of the decisions that matter most.', gets: 'A shared, written view of priorities and where time, money, and information are being lost.' },
+  { title: 'Assess', text: 'Evaluate technology, data, governance, workforce capability, and organisational readiness honestly.',
+    does: 'Review of systems, data quality, policies, and current AI use across teams.', gets: 'A readiness picture that shows what can start now and what must be fixed first.' },
+  { title: 'Design', text: 'Create the architecture, implementation plan, and AI operating model that fit your environment.',
+    does: 'Solution architecture, sequencing, ownership, and success measures agreed with leadership.', gets: 'A build plan with clear scope, owners, timelines, and baselines.' },
+  { title: 'Build', text: 'Develop the applications, AI solutions, automation workflows, and decision intelligence platforms.',
+    does: 'Short build cycles with the people who will use the system, tested on real data.', gets: 'Working software that people use from the first release.' },
+  { title: 'Enable', text: 'Support adoption through governance, training, and integration into everyday operations.',
+    does: 'Role-based training, champions, usage guidelines, and handover documentation.', gets: 'Teams that use the system confidently and can run it without us.' },
+  { title: 'Optimize', text: 'Measure business outcomes against baselines and keep improving what works.',
+    does: 'Regular reviews of adoption and operating metrics; refinements and next-phase planning.', gets: 'Evidence of impact in your own numbers, and a clear next step.' },
+];
+
+const why = [
+  { icon: 'briefcase', title: 'Business first', text: 'Every engagement starts from your objectives and operating priorities. Technology is chosen last, to fit the problem.' },
+  { icon: 'target', title: 'Designed around decisions', text: 'We design for the decisions leaders make every week, so the information leads to action.' },
+  { icon: 'shield', title: 'Built to last', text: 'Architecture designed for scale, security, and governance from the first day of the project.' },
+  { icon: 'layers', title: 'One team, end to end', text: 'Strategy, architecture, build, integration, adoption, and improvement delivered by the same people, as one programme.' },
+  { icon: 'spark', title: 'Open technology choices', text: 'We work across modern cloud, AI, and analytics platforms and recommend what fits your environment. We do not resell software.' },
+];
+---
+<Base
+  title="Novaamind | Enterprise AI Transformation Company, India"
+  description="Novaamind helps organisations put AI to work: decision intelligence, process automation, knowledge systems, and AI agents, delivered on the ground for clients in India and abroad."
+  keywords={['enterprise AI transformation', 'AI consulting India', 'decision intelligence', 'AI implementation partner', 'forward deployed engineers']}
+>
+  <!-- 1. Hero -->
+  <section class="hero hero--photo">
+    <div class="hero__bg" aria-hidden="true"><img src={photos.hero.src} alt="" fetchpriority="high" decoding="async" /></div>
+    <div class="container hero__grid">
+      <div>
+        <p class="eyebrow">Enterprise AI transformation</p>
+        <h1>Put AI to work where your business actually runs.</h1>
+        <p class="hero__sub">Building AI-native organisations.</p>
+        <p class="hero__body">
+          Novaamind designs and builds the systems that bring AI into your operations, enterprise knowledge, workforce, and executive decisions. We stay on the ground until those systems are part of daily work.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--light" href={site.primaryCta.href}>{site.primaryCta.label} <Icon name="arrow" /></a>
+          <a class="btn btn--outline-light" href="/solutions/">Explore solutions</a>
+        </div>
+      </div>
+
+      <div class="hero__visual" aria-hidden="true">
+        <div class="layer-viz">
+          <div class="layer-viz__card">
+            <div class="layer-viz__label"><span>Your systems</span><span>Sources</span></div>
+            <div class="layer-viz__chips">
+              <span class="chip">POS & billing</span><span class="chip">ERP</span><span class="chip">HRMS</span><span class="chip">Inventory</span><span class="chip">CRM</span><span class="chip">Spreadsheets</span>
+            </div>
+          </div>
+          <div class="layer-viz__flow"><span></span></div>
+          <div class="layer-viz__card">
+            <div class="layer-viz__label"><span>Intelligence layer</span><span>Novaamind</span></div>
+            <div class="layer-viz__chips">
+              <span class="chip chip--hot">One data model</span><span class="chip chip--hot">Exception alerts</span><span class="chip chip--hot">AI analysis</span><span class="chip chip--hot">Agents</span>
+            </div>
+          </div>
+          <div class="layer-viz__flow"><span></span></div>
+          <div class="layer-viz__card">
+            <div class="layer-viz__label"><span>Decisions this week</span><span>Illustrative</span></div>
+            <div class="decision">
+              <span class="decision__dot"></span>
+              <p>Product consumption at 4 locations is running well above the network norm.<small>Flagged automatically · drivers attached</small></p>
+            </div>
+            <div class="decision" style="margin-top:14px">
+              <span class="decision__dot"></span>
+              <p>Royalty statement ready for review. Two units need reconciliation.<small>Prepared from source data · no manual compilation</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Trusted by: scrolling logo strip. Logos live in public/clients/. -->
+  <section class="trusted" aria-label="Clients">
+    <div class="container">
+      <p class="trusted__label">Working with leadership teams at</p>
+    </div>
+    <div class="marquee">
+      <div class="marquee__track">
+        {[0, 1].map((copy) => (
+          <ul class="marquee__list" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {clients.map((c) => (
+              <li class="marquee__item">
+                <img src={c.logo} alt={copy === 0 ? c.name : ''} width="280" height="120" loading="lazy" decoding="async" />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. What we build -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">What we build</p>
+          <h2>Seven ways we put AI to work in your organisation.</h2>
+          <p>Each one is scoped to a business outcome and delivered as working software or a working capability inside your team.</p>
+        </div>
+        <a class="btn btn--ghost" href="/solutions/">All solutions <Icon name="arrow" /></a>
+      </div>
+      <div class="grid grid--3">
+        {core.map((s) => (
+          <a class="card card--media" href={solutionUrl(s.id)} data-reveal>
+            <div class="card__media-wrap">
+              <div class="card__media"><img src={solutionPhotos[s.id].src} alt={solutionPhotos[s.id].alt} loading="lazy" decoding="async" width="1400" height="934" /></div>
+              <span class="card__icon"><Icon name={s.data.icon} /></span>
+            </div>
+            <div class="card__content">
+              <h3>{s.data.title}</h3>
+              <p>{s.data.summary}</p>
+              <span class="link-arrow">Learn more <Icon name="arrow" /></span>
+            </div>
+          </a>
+        ))}
+        {fde && (
+          <a class="card card--feature feature-split" href={solutionUrl(fde.id)} style="grid-column:1 / -1" data-reveal>
+            <div class="feature-split__media">
+              <img src={solutionPhotos[fde.id].src} alt={solutionPhotos[fde.id].alt} loading="lazy" decoding="async" />
+            </div>
+            <div class="feature-split__body">
+              <p class="card__tag">How we deliver on the ground</p>
+              <h3>{fde.data.title}</h3>
+              <p>{fde.data.summary}</p>
+              <span class="link-arrow">How the model works <Icon name="arrow" /></span>
+            </div>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Transformation framework -->
+  <section class="section section--dark" id="framework">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Transformation framework</p>
+        <h2>Six steps from priority to measured result.</h2>
+        <p>We follow the same sequence on every engagement, so you know what is happening, what you will receive, and how progress is measured.</p>
+      </div>
+      <div class="stepper" data-stepper>
+        <div class="stepper__tabs" role="tablist" aria-label="Framework steps">
+          {framework.map((f, i) => (
+            <button class="stepper__tab" role="tab" id={`fw-tab-${i}`} aria-controls={`fw-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+              <span class="stepper__num">{String(i + 1).padStart(2, '0')}</span>
+              <span>{f.title}</span>
+            </button>
+          ))}
+        </div>
+        <div>
+          {framework.map((f, i) => (
+            <div class="stepper__panel" role="tabpanel" id={`fw-panel-${i}`} aria-labelledby={`fw-tab-${i}`} hidden={i !== 0}>
+              <div class="stepper__progress" data-progress>
+                {framework.map((_, j) => <span class={j <= i ? 'is-done' : ''}></span>)}
+              </div>
+              <p class="eyebrow">Step {String(i + 1).padStart(2, '0')} of 06</p>
+              <h3>{f.title}</h3>
+              <p class="lede">{f.text}</p>
+              <div class="stepper__meta">
+                <div><h4>What happens</h4><p>{f.does}</p></div>
+                <div><h4>What you get</h4><p>{f.gets}</p></div>
+              </div>
+              {i < framework.length - 1 && (
+                <button class="btn btn--outline-light btn--sm" type="button" style="margin-top:28px" data-step-next>
+                  Next: {framework[i + 1].title} <Icon name="arrow" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Industries -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Industries</p>
+          <h2>Industries we know from the inside.</h2>
+          <p>We work with salon networks, retail and gifting brands, education providers, and agencies.</p>
+        </div>
+        <a class="btn btn--ghost" href="/industries/">All industries <Icon name="arrow" /></a>
+      </div>
+      <div class="tiles">
+        {industries.map((i) => (
+          <a class="tile" href={industryUrl(i.id)} data-reveal>
+            <img src={industryPhotos[i.id].src} alt={industryPhotos[i.id].alt} loading="lazy" decoding="async" />
+            <h3>{i.data.title}</h3>
+            <p>{i.data.summary}</p>
+            <span class="link-arrow">Explore {i.data.title} <Icon name="arrow" /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Current engagements -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Our work</p>
+          <h2>What we build with our clients.</h2>
+          <p>Completed and current engagements. We publish case studies once outcomes are measured and the client has approved them.</p>
+        </div>
+        <a class="btn btn--ghost" href="/our-work/">See our work <Icon name="arrow" /></a>
+      </div>
+      <div class="engagements" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+        {engagements.map((e) => <EngagementCard entry={e} compact />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Why Novaamind -->
+  <section class="section">
+    <div class="container why-split">
+      <div class="media-frame" data-reveal>
+        <img src={photos.about.src} alt={photos.about.alt} loading="lazy" decoding="async" />
+        <div class="media-frame__caption">
+          <strong>Founder-led, by the author of two books on AI and strategy.</strong>
+          <em>Build Like a CEO with AI as Your Cofounder</em> and <em>The AI Strategist</em> shape how we approach every engagement. <a href="/about/" style="color:var(--accent);font-weight:600">About Novaamind</a>
+        </div>
+      </div>
+      <div>
+        <div class="section-head" style="margin-bottom:32px">
+          <p class="eyebrow">Why Novaamind</p>
+          <h2>AI built around how your business makes decisions.</h2>
+          <p>We are a focused team that takes on a small number of engagements, so senior people stay hands-on in every one.</p>
+        </div>
+        <div class="why-list">
+          {why.map((w) => (
+            <div class="why-item" data-reveal>
+              <span class="card__icon"><Icon name={w.icon} /></span>
+              <div><h3>{w.title}</h3><p>{w.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Resources -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Resources</p>
+          <h2>Practical thinking for the people who decide.</h2>
+          <p>Guides, frameworks, and research drawn from the work we do and written for leadership teams. We release new titles through the year. Register for any title and we will send it to you on the day it is published.</p>
+        </div>
+        <a class="btn btn--ghost" href="/resources/">Browse the library <Icon name="arrow" /></a>
+      </div>
+      <div class="grid grid--4">
+        {categories.map((c) => {
+          const n = countFor(c.id);
+          return (
+            <a class="card res-cat" href={categoryUrl(c.id)} data-reveal>
+              <h3>{c.data.title}</h3>
+              <p class="mb-0">{c.data.description}</p>
+              <div class="res-cat__count">
+                <span>{n > 0 ? `${n} titles` : 'Coming soon'}</span>
+                <Icon name="arrow" class="res-cat__arrow" />
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner />
+</Base>

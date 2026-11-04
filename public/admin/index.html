@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Novaamind Content Manager</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <!-- Decap CMS: writes and publishes the Markdown files in src/content/. Settings live in config.yml. -->
+  <script>window.CMS_MANUAL_INIT = true;</script>
+  <script src="https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js"></script>
+  <script>
+    // GitHub login runs through this site's own /api/auth, on whatever address it is served from.
+    CMS.init({ config: { backend: { base_url: window.location.origin } } });
+  </script>
+</body>
+</html>

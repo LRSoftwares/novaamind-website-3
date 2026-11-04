@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+import { solutionUrl } from '../lib/site';
+interface Props { entry: any; solutionTitles?: Record<string, string>; compact?: boolean }
+const { entry, solutionTitles = {}, compact = false } = Astro.props;
+const d = entry.data;
+---
+<article class="engagement" data-reveal>
+  <div class="engagement__logo"><img src={d.logo} alt={d.client} loading="lazy" decoding="async" /></div>
+  <div class="engagement__body">
+    <p class="engagement__meta"><span>{d.sector}</span><span class:list={['badge', d.status === 'Completed' ? 'badge--live' : 'badge--soon']}>{d.status}</span></p>
+    <h3>{d.client}</h3>
+    <ul class="engagement__work">{d.work.map((w: string) => <li>{w}</li>)}</ul>
+    {!compact && <p class="engagement__summary">{d.summary}</p>}
+    {compact && d.confidential && <p class="engagement__summary">Details are confidential for security reasons.</p>}
+    {!compact && d.confidential && (
+      <p class="engagement__note"><Icon name="shield" /> Confidential engagement</p>
+    )}
+    {!compact && d.solutions.length > 0 && (
+      <p class="engagement__links">
+        {d.solutions.map((s: string) => solutionTitles[s] && <a href={solutionUrl(s)}>{solutionTitles[s]} <Icon name="arrow" /></a>)}
+      </p>
+    )}
+  </div>
+</article>

@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { site } from '../lib/site';
+import { photos } from '../lib/images';
+const steps = [
+  { title: 'You tell us the priority', text: 'Share the challenge in a few lines. We reply within one working day to find a time.' },
+  { title: 'A focused conversation', text: 'About an hour with you and, if useful, one or two colleagues. We bring questions and leave the slides behind.' },
+  { title: 'A candid view', text: 'Where AI can help first, what it would take, and where it should wait.' },
+];
+---
+<Base title="Contact | Book an AI Discovery Session | Novaamind" description="Book an Executive AI Discovery Session with Novaamind, an hour-long conversation about your priorities and where AI can help first.">
+  <PageHero eyebrow="Contact" title="Book an Executive AI Discovery Session." description="An hour with our team to discuss your priorities and get a candid view of where AI can help first. There is no obligation." image={photos.contact} crumbs={[{ label: 'Contact' }]} />
+  <section class="section">
+    <div class="container split" style="grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)">
+      <div class="sticky-col">
+        <p class="eyebrow">What to expect</p>
+        <h2>What happens after you write to us</h2>
+        <div class="numbered" style="margin:24px 0 40px">
+          {steps.map((s) => (<div class="numbered__item"><div><h3>{s.title}</h3><p>{s.text}</p></div></div>))}
+        </div>
+        <ul class="checklist">
+          <li><span><strong>Email:</strong> <a href={`mailto:${site.email}`}>{site.email}</a></span></li>
+          <li><span><strong>Based in:</strong> {site.city}, working with clients in India and other countries</span></li>
+          <li><span><strong>LinkedIn:</strong> <a href={site.linkedin} target="_blank" rel="noopener">Novaamind AI Solutions</a></span></li>
+        </ul>
+      </div>
+      <div class="form-card">
+        <LeadForm source="contact-page" />
+      </div>
+    </div>
+  </section>
+</Base>

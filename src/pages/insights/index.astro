@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import { getInsights } from '../../lib/content';
+const posts = await getInsights();
+const fmt = (d: Date) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title="Insights on Enterprise AI | Novaamind Blog" description="Short, practical articles on enterprise AI, decision intelligence, and AI adoption from the Novaamind team.">
+  <PageHero eyebrow="Insights" title="Notes from the work." description="Short, practical articles on enterprise AI, decision intelligence, and adoption, written from what we see on the ground." crumbs={[{ label: 'Insights' }]} />
+  <section class="section">
+    <div class="container">
+      {posts.length > 0 ? (
+        <div class="grid grid--3">
+          {posts.map((p) => (
+            <a class="card" href={`/insights/${p.id}/`} data-reveal>
+              <p class="card__tag">{fmt(p.data.date)}{p.data.draft && ' · DRAFT'}</p>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.summary}</p>
+              <span class="link-arrow">Read <Icon name="arrow" /></span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="note"><Icon name="info" /><span>Our first articles are being written. Join the list below and we will send each one when it is published.</span></div>
+      )}
+    </div>
+  </section>
+  <section class="section section--dark section--tight">
+    <div class="container split" style="align-items:center">
+      <div>
+        <h2>Get new insights by email.</h2>
+        <p class="mb-0" style="color:#9fb0c8">One or two emails a month. Unsubscribe any time.</p>
+      </div>
+      <div>
+        <form class="newsletter" data-lead-form data-type="newsletter" novalidate>
+          <input type="hidden" name="type" value="newsletter" />
+          <div class="form__hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+          <div class="field" style="flex:1"><label class="sr-only" for="nl-email">Work email</label><input id="nl-email" name="email" type="email" placeholder="Work email" required /></div>
+          <button class="btn btn--light btn--sm" type="submit">Subscribe</button>
+          <div class="form__status" role="status" hidden></div>
+        </form>
+        <p data-form-success hidden style="color:#fff;margin:0">Thank you. You are subscribed.</p>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { site, solutionGroups, solutionUrl } from '../lib/site';
+import { photos } from '../lib/images';
+import { getSolutions, getIndustries } from '../lib/content';
+
+const solutions = await getSolutions();
+const industries = await getIndustries();
+
+// Clients shown in the logo grid. Keep in step with the homepage strip.
+const clients = [
+  { name: 'Naturals Salon & Spa', logo: '/clients/naturals.png' },
+  { name: 'Learning Room Academy', logo: '/clients/learning-room-academy.png' },
+  { name: 'DC Growth Partners', logo: '/clients/dc-growth-partners.png' },
+  { name: 'Copper & Sage', logo: '/clients/copper-and-sage.png' },
+  { name: 'The Halo Effect Consulting', logo: '/clients/the-halo-effect-consulting.png' },
+];
+
+// Figures in the stats row. Only real, countable numbers go here.
+const stats = [
+  { value: clients.length, label: 'Clients' },
+  { value: industries.length, label: 'Industries' },
+  { value: solutions.length, label: 'Solutions' },
+  { value: 2, label: 'Books by our founder' },
+];
+
+const principles = [
+  { title: 'Start from the business', text: 'We begin with the decisions and processes that move your numbers. We choose technology last. If AI is the wrong answer, we say so.' },
+  { title: 'Build what we recommend', text: 'Our work ends in systems people use every day. Many AI programmes stall at the recommendation stage, so we stay through delivery.' },
+  { title: 'Be on the ground', text: 'The real problems show up where the work happens, in stores, salons, centres, and month-end reviews. That is where we spend our time.' },
+  { title: 'Measure honestly', text: 'We record baselines first and report results in your own numbers. We publish a case study only after the outcomes are measured and the client has approved it.' },
+];
+
+const purpose = [
+  { icon: 'target', title: 'Our mission', text: 'To help leadership teams put AI to work in the decisions and processes that run their business, and to stay with them until those systems are in daily use.' },
+  { icon: 'compass', title: 'Our vision', text: 'Organisations where every leader has the information they need for the decision in front of them, and where AI is part of how everyday work gets done.' },
+  { icon: 'shield', title: 'Our values', text: 'Four principles guide every engagement.', list: principles.map((p) => p.title) },
+];
+
+// Team. Add a person by adding a line here; drop a square headshot in public/team/ and set photo.
+const team: { name: string; role: string; photo?: string; linkedin?: string; bio: string }[] = [
+  { name: 'Raghav Venkat', role: 'Founder & CEO', linkedin: site.linkedin,
+    bio: 'Raghav founded Novaamind to help leadership teams use AI as a partner in thinking and deciding, built into the weekly rhythm of how the business runs. He is the author of Build Like a CEO with AI as Your Cofounder and The AI Strategist.' },
+];
+const initials = (n: string) => n.split(' ').map((w) => w[0]).join('').slice(0, 2);
+
+const groupIcons: Record<string, string> = { enablement: 'compass', workforce: 'users', embedded: 'layers' };
+---
+<Base title="About Novaamind | Enterprise AI Company, Chennai" description="Novaamind is a founder-led enterprise AI transformation company in Chennai. Our mission, values, team, clients, and the solutions we build.">
+  <PageHero eyebrow="About us" title="We help organisations put AI to work, one working system at a time." description="Novaamind is an enterprise AI transformation company based in Chennai. We help leadership teams put AI to work in operations, knowledge, workforce capability, and executive decision-making." image={photos.about} crumbs={[{ label: 'About' }]} />
+
+  <!-- Who we are -->
+  <section class="section">
+    <div class="container split">
+      <div class="sticky-col">
+        <p class="eyebrow">Who we are</p>
+        <h2>Many AI programmes stop at the pilot stage.</h2>
+        <div class="media-frame media-frame--wide" style="margin-top:28px"><img src="/images/sol-strategy.jpg" alt="A leadership team planning with sticky notes on a wall" loading="lazy" decoding="async" /></div>
+      </div>
+      <div class="prose">
+        <p>Most organisations already have AI tools. What they often lack is AI connected to how the business runs: the data spread across systems, the decisions made in weekly reviews, and the processes that still depend on spreadsheets and memory.</p>
+        <p>Novaamind was founded in 2026 to close that gap. We work with a small number of organisations at a time, start from their operating priorities, and build the systems that change how decisions are made and work gets done. Where it helps, we put an engineer inside the client's team to do that work on the ground.</p>
+        <h3>We focus on people and on systems that get used</h3>
+        <p>Every system we build is designed with the people who will use it. We train the teams, hand over the documentation, and track adoption alongside the business numbers. A system counts as finished when the team runs it without us.</p>
+        <p>We are a young company, and we say so. We would like to be judged on the depth of the work we do with each client.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission, vision, values -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head section-head--center"><p class="eyebrow">Our purpose</p><h2>Mission, vision, and values</h2></div>
+      <div class="grid grid--3">
+        {purpose.map((p) => (
+          <div class="card purpose-card" data-reveal>
+            <div class="card__icon"><Icon name={p.icon} /></div>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+            {p.list && <ul class="checklist checklist--tight">{p.list.map((l) => <li><span>{l}</span></li>)}</ul>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-band" aria-label="Novaamind in numbers">
+    <div class="container stats">
+      {stats.map((s) => (
+        <div class="stat"><p class="stat__value"><span data-count={s.value}>{s.value}</span></p><p class="stat__label">{s.label}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Our team</p><h2>Meet the team</h2><p>Novaamind is founder-led. The same people who scope an engagement also build it and stay through adoption.</p></div>
+      <div class="team">
+        {team.map((m) => (
+          <article class="team-card" data-reveal>
+            <div class="team-card__photo">
+              {m.photo ? <img src={m.photo} alt={`Portrait of ${m.name}`} loading="lazy" decoding="async" /> : <span aria-hidden="true">{initials(m.name)}</span>}
+            </div>
+            <div class="team-card__body">
+              <h3>{m.name}</h3>
+              <p class="team-card__role">{m.role}</p>
+              <p>{m.bio}</p>
+              {m.linkedin && <a class="link-arrow" href={m.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" /> Novaamind AI Solutions on LinkedIn</a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">How we work</p><h2>Four principles behind every engagement</h2></div>
+      <div class="grid grid--2">
+        {principles.map((p, i) => (
+          <div class="outcome" data-reveal><p class="outcome__label">{String(i + 1).padStart(2, '0')}</p><h3>{p.title}</h3><p>{p.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Clients -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div><p class="eyebrow">Our clients</p><h2>The organisations we work with</h2><p>Salon networks, retail and gifting brands, education providers, and agencies.</p></div>
+        <a class="link-arrow" href="/our-work/">See our work <Icon name="arrow" /></a>
+      </div>
+      <ul class="logo-grid">
+        {clients.map((c) => <li><img src={c.logo} alt={c.name} loading="lazy" decoding="async" /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Solutions -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">What we build</p><h2>Our solutions</h2><p>Seven solutions in three groups, delivered by one team from strategy through adoption.</p></div>
+      <div class="grid grid--3">
+        {solutionGroups.map((g) => (
+          <div class="card" data-reveal>
+            <div class="card__icon"><Icon name={groupIcons[g.id]} /></div>
+            <h3>{g.title}</h3>
+            <ul class="group-links">
+              {solutions.filter((s) => s.data.group === g.id).map((s) => <li><a href={solutionUrl(s.id)}>{s.data.title}<Icon name="arrow" /></a></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container split" style="grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)">
+      <div class="sticky-col">
+        <p class="eyebrow">Contact us</p>
+        <h2>Talk to us about your priorities</h2>
+        <p class="muted">Tell us a little about your organisation and what you would like to improve. We reply within one working day.</p>
+        <ul class="checklist" style="margin-top:28px">
+          <li><span><strong>Email:</strong> <a href={`mailto:${site.email}`}>{site.email}</a></span></li>
+          <li><span><strong>Based in:</strong> {site.city}, working with clients in India and other countries</span></li>
+          <li><span><strong>LinkedIn:</strong> <a href={site.linkedin} target="_blank" rel="noopener">Novaamind AI Solutions</a></span></li>
+        </ul>
+      </div>
+      <div class="form-card">
+        <LeadForm source="about-page" />
+      </div>
+    </div>
+  </section>
+</Base>

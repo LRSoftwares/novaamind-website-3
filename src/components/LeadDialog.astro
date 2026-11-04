@@ -1,0 +1,43 @@
+---
+// One shared dialog for every gated resource. Any element with
+// data-resource-open="<id>" data-resource-title="<title>" opens it.
+import Icon from './Icon.astro';
+---
+<dialog class="dialog" data-resource-dialog aria-labelledby="rd-title">
+  <button class="dialog__close" type="button" data-dialog-close aria-label="Close"><Icon name="close" /></button>
+  <div class="dialog__inner">
+    <div data-dialog-form>
+      <p class="eyebrow" data-mode="soon">In preparation</p>
+      <p class="eyebrow" data-mode="ready" hidden>Download</p>
+      <h3 id="rd-title" data-resource-title>Get this resource</h3>
+      <p class="muted" style="font-size:.95rem" data-mode="soon">This piece is being written now. Leave your details and we will email it to you on the day it is published. We will not send anything else unless you ask.</p>
+      <p class="muted" style="font-size:.95rem" data-mode="ready" hidden>Tell us who you are and the download starts straight away.</p>
+      <form class="form" data-lead-form data-type="resource" novalidate>
+        <input type="hidden" name="type" value="resource" />
+        <input type="hidden" name="resource" value="" data-resource-field />
+        <div class="form__hp" aria-hidden="true"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <div class="field"><label for="rd-name">Full name</label><input id="rd-name" name="name" autocomplete="name" required /><span class="field__error"></span></div>
+        <div class="field"><label for="rd-email">Work email</label><input id="rd-email" name="email" type="email" autocomplete="email" required /><span class="field__error"></span></div>
+        <div class="form__row">
+          <div class="field"><label for="rd-company">Company</label><input id="rd-company" name="company" autocomplete="organization" required /><span class="field__error"></span></div>
+          <div class="field"><label for="rd-role">Role</label><input id="rd-role" name="role" autocomplete="organization-title" required /><span class="field__error"></span></div>
+        </div>
+        <button class="btn btn--block" type="submit" data-submit-label>Notify me when it is published</button>
+        <div class="form__status" role="status" hidden></div>
+      </form>
+    </div>
+    <div class="form-success" data-form-success hidden>
+      <div class="form-success__icon"><Icon name="check" /></div>
+      <div data-mode="soon">
+        <h3>You are on the list.</h3>
+        <p class="muted">We will email you as soon as this resource is published.</p>
+        <button class="btn btn--ghost" type="button" data-dialog-close>Close</button>
+      </div>
+      <div data-mode="ready" hidden>
+        <h3>Your download is ready.</h3>
+        <p class="muted">If it did not start automatically, use the button below.</p>
+        <a class="btn" href="#" data-download-link download>Download PDF</a>
+      </div>
+    </div>
+  </div>
+</dialog>
